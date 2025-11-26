@@ -65,9 +65,9 @@ app.use(errorHandler);
 // Start server
 const PORT = config.port;
 app.listen(PORT, () => {
-  logger.info(`🚀 Coupon System API is running!`);
-  logger.info(`📌 URL: http://localhost:${PORT}`);
-  logger.info(`🛠️ Environment: ${process.env.NODE_ENV}`);
+  logger.info(` Coupon System API is running!`);
+  logger.info(` URL: http://localhost:${PORT}`);
+  logger.info(`Environment: ${process.env.NODE_ENV}`);
 });
 
 // Graceful shutdown
