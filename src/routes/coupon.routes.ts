@@ -20,10 +20,6 @@ export function getValidationLogService() {
   return validationLogService;
 }
 
-/**
- * POST /api/coupons/user-specific
- * Create a user-specific coupon
- */
 router.post(
   '/user-specific',
   validateRequest(createUserSpecificCouponSchema),
@@ -39,10 +35,6 @@ router.post(
   })
 );
 
-/**
- * POST /api/coupons/time-specific
- * Create a time-specific coupon
- */
 router.post(
   '/time-specific',
   validateRequest(createTimeSpecificCouponSchema),
@@ -62,10 +54,6 @@ router.post(
   })
 );
 
-/**
- * POST /api/coupons/validate
- * Validate and apply a coupon
- */
 router.post(
   '/validate',
   validateRequest(validateCouponSchema),
@@ -97,10 +85,6 @@ router.post(
   })
 );
 
-/**
-  *GET /api/coupons/:code
-  *Get coupon details by code
- */
 router.get(
   '/:code',
   asyncHandler(async (req: Request, res: Response): Promise<void> => {
@@ -122,10 +106,6 @@ router.get(
   })
 );
 
-/**
- * GET /api/coupons/user/:userId
- * Get all coupons for a specific user
- */
 router.get(
   '/user/:userId',
   asyncHandler(async (req: Request, res: Response) => {
@@ -140,10 +120,6 @@ router.get(
   })
 );
 
-/**
- * GET /api/coupons/active/time-specific
- * Get all active time-specific coupons
- */
 router.get(
   '/active/time-specific',
   asyncHandler(async (_req: Request, res: Response) => {
@@ -157,10 +133,6 @@ router.get(
   })
 );
 
-/**
- * GET /api/coupons/:couponId/usage-history
- * Get usage history for a coupon
- */
 router.get(
   '/:couponId/usage-history',
   asyncHandler(async (req: Request, res: Response) => {
@@ -175,10 +147,6 @@ router.get(
   })
 );
 
-/**
- * GET /api/coupons/user/:userId/usage-history
- * Get usage history for a user
- */
 router.get(
   '/user/:userId/usage-history',
   asyncHandler(async (req: Request, res: Response) => {

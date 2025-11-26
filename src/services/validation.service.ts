@@ -20,16 +20,12 @@ export class ValidationService {
     this.validationLogService = validationLogService;
   }
 
-  /**
-   * Validate and apply a coupon
-   */
   async validateCoupon(dto: ValidateCouponDto): Promise<ValidationResult> {
     const startTime = Date.now();
     let result: ValidationResult = { valid: false, reason: 'Unknown error' };
     let couponId: string | undefined;
     
     try {
-      // 1. Check if coupon exists
       const coupon = await this.couponService.getCouponByCode(dto.code);
       couponId = coupon?.id;
       if (!coupon) {
@@ -37,13 +33,11 @@ export class ValidationService {
         return result;
       }
 
-      // 2. Check if coupon is active
       if (coupon.status !== CouponStatus.ACTIVE) {
         result = { valid: false, reason: `Coupon is ${coupon.status}` };
         return result;
       }
 
-      // 3. Check minimum order value
       if (dto.orderValue < coupon.minOrderValue) {
         result = { 
           valid: false, 
@@ -52,7 +46,6 @@ export class ValidationService {
         return result;
       }
 
-      // 4. Check if order has already used this coupon (only if orderId provided)
       if (dto.orderId) {
         const orderAlreadyUsed = await this.isOrderAlreadyUsed(dto.orderId);
         if (orderAlreadyUsed) {
@@ -61,7 +54,6 @@ export class ValidationService {
         }
       }
 
-      // 5. Type-specific validation
       let validationResult: ValidationResult;
       
       if (coupon.type === CouponType.USER_SPECIFIC) {
@@ -70,7 +62,6 @@ export class ValidationService {
         validationResult = await this.validateTimeSpecificCoupon(coupon, dto);
       }
 
-      // 6. If valid, calculate discount and record usage
       if (validationResult.valid) {
         const discountAmount = calculateDiscount(
           dto.orderValue,
@@ -148,19 +139,14 @@ export class ValidationService {
     }
   }
 
-  /**
-   * Validate user-specific coupon
-   */
   private async validateUserSpecificCoupon(
     coupon: any,
     dto: ValidateCouponDto
   ): Promise<ValidationResult> {
-    // Check if coupon belongs to the user
     if (coupon.userId !== dto.userId) {
       return { valid: false, reason: 'This coupon is not assigned to you' };
     }
 
-    // Check if user has already used this coupon
     const usageCount = await this.getUserCouponUsageCount(coupon.id, dto.userId);
     if (usageCount > 0) {
       return { valid: false, reason: 'You have already used this coupon' };
@@ -169,29 +155,22 @@ export class ValidationService {
     return { valid: true };
   }
 
-  /**
-   * Validate time-specific coupon
-   */
   private async validateTimeSpecificCoupon(
     coupon: any,
     dto: ValidateCouponDto
   ): Promise<ValidationResult> {
-    // Check date validity
     if (!isWithinValidDateRange(coupon.validFrom, coupon.validUntil)) {
-      // Update status to expired if needed
       if (coupon.validUntil && new Date() > coupon.validUntil) {
         await this.couponService.updateCouponStatus(coupon.id, CouponStatus.EXPIRED);
       }
       return { valid: false, reason: 'Coupon has expired or is not yet valid' };
     }
 
-    // Check total usage limit
     if (coupon.maxTotalUses && coupon.currentTotalUses >= coupon.maxTotalUses) {
       await this.couponService.updateCouponStatus(coupon.id, CouponStatus.EXHAUSTED);
       return { valid: false, reason: 'Coupon usage limit reached' };
     }
 
-    // Check per-user usage limit
     if (coupon.maxUsesPerUser) {
       const userUsageCount = await this.getUserCouponUsageCount(coupon.id, dto.userId);
       if (userUsageCount >= coupon.maxUsesPerUser) {
@@ -205,9 +184,6 @@ export class ValidationService {
     return { valid: true };
   }
 
-  /**
-   * Get usage count for a user and coupon
-   */
   private async getUserCouponUsageCount(couponId: string, userId: string): Promise<number> {
     const query = `
       SELECT COUNT(*) as count 
@@ -224,9 +200,6 @@ export class ValidationService {
     }
   }
 
-  /**
-   * Check if an order has already used a coupon
-   */
   private async isOrderAlreadyUsed(orderId: string): Promise<boolean> {
     const query = 'SELECT COUNT(*) as count FROM coupon_usage WHERE order_id = $1';
     
@@ -239,9 +212,6 @@ export class ValidationService {
     }
   }
 
-  /**
-   * Get coupon usage history
-   */
   async getCouponUsageHistory(couponId: string): Promise<CouponUsage[]> {
     const query = `
       SELECT * FROM coupon_usage 
@@ -268,9 +238,6 @@ export class ValidationService {
     }
   }
 
-  /**
-   * Get user usage history
-   */
   async getUserUsageHistory(userId: string): Promise<CouponUsage[]> {
     const query = `
       SELECT * FROM coupon_usage 

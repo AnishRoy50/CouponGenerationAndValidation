@@ -11,17 +11,13 @@ export class ValidationLogService {
     this.logQueue = new ValidationLogQueue(this.batchInsertLogs.bind(this));
   }
 
-  /**
-   * Log a validation attempt asynchronously (non-blocking)
-   */
+
   public logValidationAttempt(log: ValidationLog): void {
-    // This is non-blocking - just adds to queue
+  
     this.logQueue.add(log);
   }
 
-  /**
-   * Batch insert logs into database
-   */
+
   private async batchInsertLogs(logs: ValidationLog[]): Promise<void> {
     if (logs.length === 0) return;
 
@@ -72,9 +68,7 @@ export class ValidationLogService {
     }
   }
 
-  /**
-   * Get validation statistics for a coupon
-   */
+
   public async getCouponValidationStats(couponCode: string): Promise<any> {
     const result = await this.pool.query(
       `
@@ -94,9 +88,6 @@ export class ValidationLogService {
     return result.rows[0];
   }
 
-  /**
-   * Get recent validation attempts
-   */
   public async getRecentValidations(limit: number = 100): Promise<ValidationLog[]> {
     const result = await this.pool.query(
       `
@@ -114,17 +105,11 @@ export class ValidationLogService {
     return result.rows;
   }
 
-  /**
-   * Graceful shutdown
-   */
   public async shutdown(): Promise<void> {
     await this.logQueue.shutdown();
     logger.info('ValidationLogService shut down gracefully');
   }
 
-  /**
-   * Get queue size for monitoring
-   */
   public getQueueSize(): number {
     return this.logQueue.getQueueSize();
   }

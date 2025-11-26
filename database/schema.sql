@@ -25,16 +25,16 @@ CREATE TABLE coupons (
     -- For time-specific coupons
     valid_from TIMESTAMP,
     valid_until TIMESTAMP,
-    max_uses_per_user INTEGER, -- How many times a user can use this coupon
-    max_total_uses INTEGER, -- Total number of times this coupon can be used across all users
+    max_uses_per_user INTEGER, 
+    max_total_uses INTEGER, 
     current_total_uses INTEGER DEFAULT 0,
     
     -- Metadata
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    created_by VARCHAR(100), -- Admin or system that created it
+    created_by VARCHAR(100), 
     
-    -- Constraints
+    
     CONSTRAINT valid_date_range CHECK (
         (type = 'time_specific' AND valid_from IS NOT NULL AND valid_until IS NOT NULL AND valid_from < valid_until)
         OR type = 'user_specific'

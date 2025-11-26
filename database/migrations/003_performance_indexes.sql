@@ -1,7 +1,5 @@
 -- Performance optimization indexes
 -- These indexes are crucial for achieving <100ms response time
-
--- Composite index for coupon lookup and validation in one query
 CREATE INDEX IF NOT EXISTS idx_coupons_code_status_type 
 ON coupons(code, status, type) 
 INCLUDE (discount_type, discount_value, max_discount_amount, min_order_value, user_id, valid_from, valid_until, max_total_uses, current_total_uses);

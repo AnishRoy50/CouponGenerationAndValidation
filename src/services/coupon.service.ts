@@ -10,9 +10,6 @@ import { generateCouponCode, generateUniqueCouponCode } from '../utils/helpers';
 import { logger } from '../utils/logger';
 
 export class CouponService {
-  /**
-   * Generate a user-specific coupon
-   */
   async generateUserSpecificCoupon(dto: CreateUserSpecificCouponDto): Promise<Coupon> {
     const code = generateUniqueCouponCode('USER');
     
@@ -48,9 +45,6 @@ export class CouponService {
     }
   }
 
-  /**
-   * Generate a time-specific coupon
-   */
   async generateTimeSpecificCoupon(dto: CreateTimeSpecificCouponDto): Promise<Coupon> {
     const code = dto.code || generateCouponCode(12, 'PROMO');
     
@@ -96,11 +90,7 @@ export class CouponService {
     }
   }
 
-  /**
-   * Get coupon by code
-   */
   async getCouponByCode(code: string): Promise<Coupon | null> {
-    // Optimized query using composite index (code, status, type)
     const query = `
       SELECT id, code, type, discount_type, discount_value, max_discount_amount,
              min_order_value, description, user_id, status, created_by,
@@ -119,9 +109,6 @@ export class CouponService {
     }
   }
 
-  /**
-   * Get coupon by ID
-   */
   async getCouponById(id: string): Promise<Coupon | null> {
     const query = 'SELECT * FROM coupons WHERE id = $1';
     
@@ -134,9 +121,6 @@ export class CouponService {
     }
   }
 
-  /**
-   * Get all coupons for a user
-   */
   async getUserCoupons(userId: string): Promise<Coupon[]> {
     const query = `
       SELECT * FROM coupons 
@@ -153,9 +137,6 @@ export class CouponService {
     }
   }
 
-  /**
-   * Get all active time-specific coupons
-   */
   async getActiveTimeSpecificCoupons(): Promise<Coupon[]> {
     const query = `
       SELECT * FROM coupons 
@@ -174,9 +155,6 @@ export class CouponService {
     }
   }
 
-  /**
-   * Update coupon status
-   */
   async updateCouponStatus(id: string, status: CouponStatus): Promise<void> {
     const query = 'UPDATE coupons SET status = $1 WHERE id = $2';
     
@@ -189,9 +167,6 @@ export class CouponService {
     }
   }
 
-  /**
-   * Increment coupon usage count
-   */
   async incrementUsageCount(id: string): Promise<void> {
     const query = 'UPDATE coupons SET current_total_uses = current_total_uses + 1 WHERE id = $1';
     
@@ -203,9 +178,6 @@ export class CouponService {
     }
   }
 
-  /**
-   * Map database row to Coupon object
-   */
   private mapRowToCoupon(row: any): Coupon {
     return {
       id: row.id,
