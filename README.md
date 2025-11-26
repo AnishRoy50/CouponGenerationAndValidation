@@ -33,6 +33,23 @@ npm run benchmark   # Test performance (for testing)
 
 **Environment**: Copy `.env` and set `DB_PASSWORD`
 
+```
+NODE_ENV=development
+PORT=3000
+
+# Database Configuration
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=*****
+DB_USER=postgres
+DB_PASSWORD=******
+DB_MAX_CONNECTIONS=20
+
+# Logging
+LOG_LEVEL=info
+```
+The .env file should look like this only.
+
 ---
 
 ## Features
