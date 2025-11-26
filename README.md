@@ -1,6 +1,20 @@
+<div align="center">
+
 # Coupon Generation and Validation System
 
-Production-ready microservice for coupon management with Node.js, TypeScript, and PostgreSQL. Supports user-specific and time-specific coupons with comprehensive validation and async logging.
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-green?logo=node.js)](https://nodejs.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-blue?logo=postgresql)](https://www.postgresql.org/)
+[![Express](https://img.shields.io/badge/Express-4.18-lightgrey?logo=express)](https://expressjs.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+**Production-ready microservice for coupon management with comprehensive validation and async logging**
+
+[Features](#features) • [Quick Start](#quick-start) • [API Docs](#api-endpoints) • [Performance](#performance-testing)
+
+</div>
+
+---
 
 ## Performance
 - **Response Time**: <100ms average (93ms tested with 1M users, 5K coupons)
@@ -19,21 +33,29 @@ npm run benchmark   # Test performance (optional)
 
 **Environment**: Copy `.env` and set `DB_PASSWORD`
 
+---
+
 ## Features
 
 ### Coupon Types
-1. **User-Specific**: Single-use, tied to individual users
-2. **Time-Specific**: Valid within date range, configurable usage limits
 
-### Capabilities
-- Percentage or fixed discounts with maximum caps
-- Minimum order value requirements
-- Usage tracking with audit trail (IP, user agent, timestamps)
-- Automatic status management (active → expired/exhausted)
-- Transaction-safe validation (ACID compliance)
-- Async validation logging (zero performance impact)
+| Type | Description | Use Case |
+|------|-------------|----------|
+| **User-Specific** | Single-use, tied to individual users | Welcome bonuses, loyalty rewards |
+| **Time-Specific** | Valid within date range, usage limits | Flash sales, seasonal campaigns |
 
-## Architecture
+### 🛠️ Capabilities
+
+- ✅ Percentage or fixed discounts with maximum caps
+- ✅ Minimum order value requirements
+- ✅ Usage tracking with audit trail (IP, user agent, timestamps)
+- ✅ Automatic status management (active → expired/exhausted)
+- ✅ Transaction-safe validation (ACID compliance)
+- ✅ Async validation logging (zero performance impact)
+
+---
+
+## 🏗️ Architecture
 
 **Stack**: Node.js, TypeScript, Express, PostgreSQL, Joi, Winston  
 **Pattern**: Layered (Routes → Services → Database)  
@@ -58,6 +80,8 @@ database/
 **Tables**: `coupons`, `coupon_usage`, `validation_logs`  
 **Indexes**: Composite on `(code, status, type)`, partial unique on `order_id`  
 **Constraints**: CHECK for date ranges, user validation
+
+---
 
 ## API Endpoints
 
@@ -189,7 +213,30 @@ POST /api/coupons/validate
 - `GET /api/coupons/user/:userId/usage-history` - User usage logs
 - `GET /health` - Health check + async log queue status
 
-## Setup
+<details>
+<summary><b> Response Formats</b></summary>
+
+**Success Response**
+```json
+{
+  "success": true,
+  "data": { /* response data */ },
+  "message": "Operation successful"
+}
+```
+
+**Error Response**
+```json
+{
+  "success": false,
+  "error": "Error description"
+}
+```
+</details>
+
+---
+
+## ⚙️ Setup
 
 ### Prerequisites
 - Node.js v18+
