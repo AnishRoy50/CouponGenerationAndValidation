@@ -12,9 +12,9 @@ Production-ready microservice for coupon management with Node.js, TypeScript, an
 ```bash
 npm install
 npm run migrate     # Setup database
-npm run seed        # Generate 1M users + 5K coupons (optional, for testing)
+npm run seed        # Generate 1M users + 5K coupons (for testing --its optional) 
 npm run dev         # Start server
-npm run benchmark   # Test performance (optional)
+npm run benchmark   # Test performance (for testing)
 ```
 
 **Environment**: Copy `.env` and set `DB_PASSWORD`
@@ -87,7 +87,7 @@ POST /api/coupons/user-specific
   "success": true,
   "data": {
     "id": "uuid",
-    "code": "USER-ABC123XYZ",
+    "code": "USER-ABC123XY",
     "type": "user_specific",
     "discountType": "percentage",
     "discountValue": 20,
